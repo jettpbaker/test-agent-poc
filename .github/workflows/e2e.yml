@@ -13,8 +13,10 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - run: bun install
+      - run: bunx cypress install
 
       - uses: cypress-io/github-action@v6
         with:
+          install: false
           start: bun run dev
           wait-on: http://localhost:5173
