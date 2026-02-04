@@ -39,9 +39,9 @@ function handleSubmit() {
         <label>Message</label>
         <textarea v-model="message" class="message-input" placeholder="Your feedback"></textarea>
       </div>
-      <button type="submit" class="submit-btn" data-testid="submit-button">Submit</button>
+      <button type="submit" class="submit-btn" data-testid="submit-btn">Submit</button>
     </form>
-    <p v-if="submitted" class="success-msg" data-testid="success-msg">
+    <p v-if="submitted" class="success-msg" data-testid="success-message">
       Thank you for your feedback!
     </p>
     <p v-if="error" class="error-msg" data-testid="error-message">
