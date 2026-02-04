@@ -18,17 +18,24 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 1
-          persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install && bunx cypress install
+
+      - name: Install OpenCode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Run OpenCode auto-fix
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-        with:
-          model: opencode/claude-sonnet-4-20250514
-          prompt: |
-            The Cypress e2e tests are failing on this branch.
-            Run the tests with `bunx cypress run`, read the failure output,
-            identify what's wrong in the source code, and fix it.
-            Only modify files in src/. Do not modify test files.
-            Create a new branch and submit a PR with the fix
-            targeting the branch: ${{ github.event.workflow_run.head_branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          opencode run -m opencode/claude-sonnet-4-20250514 \
+            "The Cypress e2e tests are failing on this branch. \
+            Run the tests with 'bunx cypress run', read the failure output, \
+            identify what's wrong in the source code, and fix it. \
+            Only modify files in src/. Do not modify test files. \
+            Use gh and git to create a new branch named opencode/fix-${{ github.event.workflow_run.head_branch }} \
+            and submit a PR targeting the branch: ${{ github.event.workflow_run.head_branch }}"
