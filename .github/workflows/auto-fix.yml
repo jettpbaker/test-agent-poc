@@ -32,7 +32,7 @@ jobs:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          opencode run -m opencode/claude-sonnet-4-20250514 \
+          opencode run -m opencode/claude-haiku-4-5 \
             "The Cypress e2e tests are failing on this branch. \
             Run the tests with 'bunx cypress run', read the failure output, \
             identify what's wrong in the source code, and fix it. \
