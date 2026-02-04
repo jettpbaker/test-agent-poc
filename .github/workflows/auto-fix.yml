@@ -1,0 +1,34 @@
+name: Auto-fix failing tests
+
+on:
+  workflow_run:
+    workflows: ["E2E Tests"]
+    types: [completed]
+
+jobs:
+  auto-fix:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: anomalyco/opencode/github@latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        with:
+          model: opencode/claude-sonnet-4-20250514
+          prompt: |
+            The Cypress e2e tests are failing on this branch.
+            Run the tests with `bunx cypress run`, read the failure output,
+            identify what's wrong in the source code, and fix it.
+            Only modify files in src/. Do not modify test files.
+            Create a new branch and submit a PR with the fix
+            targeting the branch: ${{ github.event.workflow_run.head_branch }}
