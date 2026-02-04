@@ -36,7 +36,7 @@ function deleteTask(id: number) {
     <div class="task-input-row">
       <input
         v-model="newTask"
-        data-testid="task-input-broken"
+        data-testid="task-input"
         placeholder="New task..."
         @keyup.enter="addTask"
       />
